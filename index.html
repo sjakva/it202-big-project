@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+      
+    <title>Big Project</title>
+      
+      <!-- MCW -->
+  <link href="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@v4.0.0/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <!-- Google Charts -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+      <!-- Color Scheme: http://paletton.com/#uid=3020o0kjgiQ838odqdmoynNuptf -->
+  <style>
+
+    body {
+        margin: 0 auto;
+        background-color: #1F2A28;
+        color: #07927F;
+        height: auto;
+        width: auto;
+        
+      }
+    main {margin-left: 8px;}
+
+   :root {--mdc-theme-primary: #96403C;}
+   .view {display: none;}
+   .mdc-top-app-bar, 
+      .mdc-top-app-bar .mdc-top-app-bar__action-item,
+          .material-icons.mdc-top-app-bar__navigation-icon.mdc-icon-button.mdc-ripple-upgraded--unbounded.mdc-ripple-upgraded {color: #07927F;}
+   .mdc-drawer__content {background-color: #27433F;}
+   .mdc-drawer .mdc-list-item--activated .mdc-list-item__graphic {color: #96403C;}
+   .mdc-drawer .mdc-list-item--activated .mdc-list-item__text {color: #96403C;}
+   
+  </style>
+
+  </head>
+    
+  <body>  
+    
+      <!-- MODAL DRAWER -->
+    <aside class="mdc-drawer mdc-drawer--modal">
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="#home" aria-current="page">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">home</i>
+          <span class="mdc-list-item__text">Home</span>
+        </a>
+        <a class="mdc-list-item mdc-list-item--activated" href="#search" aria-current="page">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">search</i>
+          <span class="mdc-list-item__text">Search</span>
+        </a>
+        <a class="mdc-list-item" href="#data">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">table_chart</i>
+          <span class="mdc-list-item__text">Data Table</span>
+        </a>
+        <a class="mdc-list-item" href="#chart">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
+          <span class="mdc-list-item__text">Chart</span>
+        </a>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="mdc-drawer-scrim"></div>
+
+      <!-- TOP APP BAR -->
+<header class="mdc-top-app-bar">
+  <div class="mdc-top-app-bar__row">
+      
+      <!-- app bar -->
+    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+      <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+      <span class="mdc-top-app-bar__title">Menu</span>
+    </section>
+      
+      <!-- toolbar icons -->
+     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+      <button icon-nav="home" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Home">home</button>
+      <button icon-nav="search" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
+      <button icon-nav="data" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Data Table">table_chart</button>
+      <button icon-nav="chart" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Chart">show_chart</button>
+    </section> 
+      
+  </div>
+</header>
+
+
+    <!-- DIVS/PAGES -->
+  <main class="mdc-top-app-bar--fixed-adjust">
+      
+    <div id="home" class="view">
+        <h1 class="mdc-typography--headline1">Home</h1>
+            <h3>Home Page for application</h3>
+        <br>
+        <p>Design the rest of the app, then develop home page</p>
+      </div>
+
+
+  </main>
+
+
+  <script>
+
+      //     MCW / Google Charts     //
+    const appBar = mdc.topAppBar.MDCTopAppBar.attachTo(document.querySelector('header.mdc-top-app-bar'));
+    const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+    google.charts.load('current', {'packages':['corechart']});
+    
+      
+      // initial data loading
+    let api = "https://pomber.github.io/covid19/timeseries.json";
+    let data;
+      
+    fetch(api)          // fetch response from api
+      .then(response => response.json())
+      .then(json => {
+        data = json;    // store json object in global variable for reference
+
+//         for (country in data) {                                     // for each country
+//           let option = document.createElement("OPTION");               // create an "option" element
+//           option.value = country;                                      // assign country as value as we loop through 
+//           document.querySelector("#countries").appendChild(option);    // append option element to datalist
+//         }
+      });
+          
+              
+        ///     Page controls     ///
+    // hide screens  
+    const hideScreens = () => {     // hides all divs with class "view" 
+      document.querySelectorAll("div.view").forEach( (item) => {
+        item.style.display = "none";
+      })
+    }
+    // show a particular page
+    const showPage = (p) => {      // for showing initial home page and redirecting to chart
+        hideScreens(); 
+        document.querySelector(`#${p}`).style.display = "block";
+    }
+    showPage("home");     // calls function to display page with id="home" 
+    
+   
+        ///     Top App Bar and Drawer     ///
+    // open drawer
+    document.querySelector(".mdc-top-app-bar__navigation-icon")
+      .addEventListener("click", 
+          (e) => {drawer.open = true;}  // open drawer
+      );
+    // navigation through icon buttons 
+    document.querySelectorAll(".mdc-top-app-bar__action-item") 
+        .forEach( (element) => {
+          element.addEventListener("click", (e) => {
+            let pageName = e.target.getAttribute("icon-nav");
+            showPage(pageName);
+          })
+        }) 
+
+    // navigate through drawer
+    document.querySelectorAll('aside.mdc-drawer a.mdc-list-item')
+      .forEach(item => {
+        item.addEventListener('click', event => {
+          
+          hideScreens();    // hide the screens
+          let target = item.getAttribute("href");    // get the href value of item clicked
+          document.querySelector(target).style.display = "block";    // display
+          drawer.open = false;    // close drawer
+
+        })
+    })
+      
+    </script>
+      
+  </body>
+    
+</html>
