@@ -108,6 +108,23 @@
             <h3>Search for Wallpaper</h3>
         <br>
         <p>Search by comic book character, event, or artist</p>
+        <input id="searchInput" class="searchInput mdc-text-field__input" list="searches">
+        <datalist id="searches">
+            </datalist>
+        
+        <br><br>
+               <!-- Buttons for Data List -->
+                <button id="addSearch" class="mdc-button mdc-button--raised">
+                  <div class="mdc-button__ripple"></div>
+                  <span class="mdc-button__label">Add to search</span>
+                </button>
+        <br><br>
+                <div id="searchesAdded"></div>
+                <button id="searchFor" class="mdc-button mdc-button--raised">
+                  <div class="mdc-button__ripple"></div>
+                  <span class="mdc-button__label">Search</span>
+                </button>   
+        
       </div>
       
     <div id="chart" class="view">
@@ -132,21 +149,69 @@
     
       
       // initial data loading
-    let api = "https://pomber.github.io/covid19/timeseries.json";
-    let data;
+    let apiWallpaper = "https://wallhaven.cc/api/v1/search?apikey=n5h8lqwfdIL7QdOkPpc7Viije1EkY0qc&q=";
+      // --> https://wallhaven.cc/api/v1/search?apikey=n5h8lqwfdIL7QdOkPpc7Viije1EkY0qc&q=spiderman 
+     // example of search query for "spiderman"
+    let iData;
+      // when user hits search button
+    document.querySelector("#searchFor")                             // select "search" button
+        .addEventListener("click",(e) => {                            // on click event, 
+          let input = document.querySelector("#searchInput").value; // store input value
+            // store search value as option
+            let option = document.createElement("OPTION");               // create an "option" element
+            option.value = input;
+            document.querySelector("#searches").appendChild(option);    // append option element to datalist
+            // append search value to endpoint
+            apiWallpaper += input;
+            // fetch data
+            fetch(apiWallpaper, {mode: 'no-cors'})
+                .then(response => response.json())
+                .then(json => {
+                let data = json;
+            });
+        
+        });
+      // append search value to endpoint
+      // 
+      // fetch data
+      // 
+      // loop through the array
+      // 
+      // append each image to new div
+      // 
+      // store the information to database
+     
       
-    fetch(api)          // fetch response from api
-      .then(response => response.json())
-      .then(json => {
-        data = json;    // store json object in global variable for reference
+      
+//     let data;
+      
+//     fetch(apiWallpaper)          // fetch response from api
+//       .then(response => response.json())
+//       .then(json => {
+//         data = json;    // store json object in global variable for reference
+//         console.log(data);
 
 //         for (country in data) {                                     // for each country
 //           let option = document.createElement("OPTION");               // create an "option" element
 //           option.value = country;                                      // assign country as value as we loop through 
 //           document.querySelector("#countries").appendChild(option);    // append option element to datalist
 //         }
-      });
+//       });
           
+      
+      
+      // Searching for wallpapers
+     //     Adds search queries to data list 
+    let searchList = [];
+      
+    document.querySelector("#addSearch")                             // select "add to search" button
+        .addEventListener("click",(e) => {                            // on click event, 
+          let searchValue = document.querySelector("#searchInput").value; // store input value
+          searchList.push(searchValue);                            // push value to list of searches
+          document.querySelector("#searchesAdded").textContent = searchList; // add to "searchFor" list 
+        });
+      
+     // When search button pushed, loads wallpapers from wallpaper api
               
         ///     Page controls     ///
     // hide screens  
@@ -192,6 +257,23 @@
     })
       
     </script>
+      
+      <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script> 
+        <script>
+      
+        const db = new Dexie('MyApp');
+
+        // Declare tables, IDs and indexes
+        db.version(1).stores({
+            results: '++id, name'
+        });
+            
+        db.results.add( {
+            name: "Spiderman",
+        })
+        
+          </script>
       
   </body>
     
