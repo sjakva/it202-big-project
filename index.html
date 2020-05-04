@@ -49,6 +49,8 @@
   </head>
     
   <body>  
+      
+  <!--  ------------------------------------------------------------------------------------------------  -->
     
       <!-- MODAL DRAWER -->
     <aside class="mdc-drawer mdc-drawer--modal">
@@ -62,9 +64,9 @@
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">search</i>
           <span class="mdc-list-item__text">Search</span>
         </a>
-        <a class="mdc-list-item" href="#chart">
+        <a class="mdc-list-item" href="#map">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
-          <span class="mdc-list-item__text">Chart</span>
+          <span class="mdc-list-item__text">Map</span>
         </a>
       </nav>
     </div>
@@ -72,6 +74,8 @@
 
   <div class="mdc-drawer-scrim"></div>
 
+  <!--  ------------------------------------------------------------------------------------------------  -->
+      
       <!-- TOP APP BAR -->
 <header class="mdc-top-app-bar">
   <div class="mdc-top-app-bar__row">
@@ -86,11 +90,13 @@
      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
       <button icon-nav="home" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Home">home</button>
       <button icon-nav="search" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
-      <button icon-nav="chart" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Chart">show_chart</button>
+      <button icon-nav="map" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Map">show_chart</button>
     </section> 
       
   </div>
 </header>
+      
+  <!--  ------------------------------------------------------------------------------------------------  -->
 
 
     <!-- DIVS/PAGES -->
@@ -105,37 +111,28 @@
       
     <div id="search" class="view">
         <h1 class="mdc-typography--headline1">Search</h1>
-            <h3>Search for Wallpaper</h3>
+            <h3>Search for street name</h3>
         <br>
-        <p>Search by comic book character, event, or artist</p>
+        <p>Search for street </p>
         <input id="searchInput" class="searchInput mdc-text-field__input" list="searches">
         <datalist id="searches">
             </datalist>
         
-        <br><br>
-               <!-- Buttons for Data List -->
-                <button id="addSearch" class="mdc-button mdc-button--raised">
-                  <div class="mdc-button__ripple"></div>
-                  <span class="mdc-button__label">Add to search</span>
-                </button>
-        <br><br>
-                <div id="searchesAdded"></div>
-                <button id="searchFor" class="mdc-button mdc-button--raised">
-                  <div class="mdc-button__ripple"></div>
-                  <span class="mdc-button__label">Search</span>
-                </button>   
         
       </div>
       
-    <div id="chart" class="view">
-        <h1 class="mdc-typography--headline1">Chart</h1>
-            <h3>Character drawn per year</h3>
+    <div id="map" class="view">
+        <h1 class="mdc-typography--headline1">Map</h1>
+            <h3>Map showing traffic crashes on street</h3>
         <br>
-        <p>Chart showing how often character is drawn in comics per year</p>
+        <p>--- p element ---</p>
       </div>
 
-
   </main>
+  
+      
+  <!--  ------------------------------------------------------------------------------------------------  -->
+      
       
       <script src="js/app.js"></script>
 
@@ -147,71 +144,14 @@
     const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     google.charts.load('current', {'packages':['corechart']});
     
-      
-      // initial data loading
-    let apiWallpaper = "https://wallhaven.cc/api/v1/search?apikey=n5h8lqwfdIL7QdOkPpc7Viije1EkY0qc&q=";
-      // --> https://wallhaven.cc/api/v1/search?apikey=n5h8lqwfdIL7QdOkPpc7Viije1EkY0qc&q=spiderman 
-     // example of search query for "spiderman"
-    let iData;
-      // when user hits search button
-    document.querySelector("#searchFor")                             // select "search" button
-        .addEventListener("click",(e) => {                            // on click event, 
-          let input = document.querySelector("#searchInput").value; // store input value
-            // store search value as option
-            let option = document.createElement("OPTION");               // create an "option" element
-            option.value = input;
-            document.querySelector("#searches").appendChild(option);    // append option element to datalist
-            // append search value to endpoint
-            apiWallpaper += input;
-            // fetch data
-            fetch(apiWallpaper, {mode: 'no-cors'})
-                .then(response => response.json())
-                .then(json => {
-                let data = json;
-            });
         
-        });
-      // append search value to endpoint
-      // 
-      // fetch data
-      // 
-      // loop through the array
-      // 
-      // append each image to new div
-      // 
-      // store the information to database
-     
-      
-      
-//     let data;
-      
-//     fetch(apiWallpaper)          // fetch response from api
-//       .then(response => response.json())
-//       .then(json => {
-//         data = json;    // store json object in global variable for reference
-//         console.log(data);
-
-//         for (country in data) {                                     // for each country
-//           let option = document.createElement("OPTION");               // create an "option" element
-//           option.value = country;                                      // assign country as value as we loop through 
-//           document.querySelector("#countries").appendChild(option);    // append option element to datalist
-//         }
-//       });
+      // initial data loading
+    let api = "https://data.cityofchicago.org/resource/_311-potholes.json";
+    
           
       
       
-      // Searching for wallpapers
-     //     Adds search queries to data list 
-    let searchList = [];
-      
-    document.querySelector("#addSearch")                             // select "add to search" button
-        .addEventListener("click",(e) => {                            // on click event, 
-          let searchValue = document.querySelector("#searchInput").value; // store input value
-          searchList.push(searchValue);                            // push value to list of searches
-          document.querySelector("#searchesAdded").textContent = searchList; // add to "searchFor" list 
-        });
-      
-     // When search button pushed, loads wallpapers from wallpaper api
+  // ------------------------------------------------------------------------------------------------------- //    
               
         ///     Page controls     ///
     // hide screens  
@@ -256,6 +196,8 @@
         })
     })
       
+  // ------------------------------------------------------------------------------------------------------- //    
+      
     </script>
       
       <!-- Include Dexie -->
@@ -264,14 +206,14 @@
       
         const db = new Dexie('MyApp');
 
-        // Declare tables, IDs and indexes
-        db.version(1).stores({
-            results: '++id, name'
-        });
+//         // Declare tables, IDs and indexes
+//         db.version(1).stores({
+//             results: '++id, name'
+//         });
             
-        db.results.add( {
-            name: "Spiderman",
-        })
+//         db.results.add( {
+//             name: "Spiderman",
+//         })
         
           </script>
       

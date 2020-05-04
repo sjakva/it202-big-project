@@ -1,6 +1,6 @@
 {
-    "scope":"/",
-    "name":"Comic Book Wallpaper App",
+    "scope":"./",
+    "name":"Big Project Data App",
     "short_name":"ShoaibsBigDataApp",
     "start_url":"index.html",
     "display":"standalone",

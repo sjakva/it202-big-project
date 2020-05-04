@@ -1,4 +1,4 @@
-const staticBigDataApp = "shoaib-comic-app-v1"
+const staticBigDataApp = "shoaib-app-v1"
 const assets = [
   "/",
   "/index.html",
