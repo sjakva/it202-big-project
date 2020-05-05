@@ -65,7 +65,7 @@
           <span class="mdc-list-item__text">Search</span>
         </a>
         <a class="mdc-list-item" href="#map">
-          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">show_chart</i>
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">map</i>
           <span class="mdc-list-item__text">Map</span>
         </a>
       </nav>
@@ -90,7 +90,7 @@
      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
       <button icon-nav="home" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Home">home</button>
       <button icon-nav="search" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
-      <button icon-nav="map" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Map">show_chart</button>
+      <button icon-nav="map" class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Map">map</button>
     </section> 
       
   </div>
@@ -106,7 +106,7 @@
         <h1 class="mdc-typography--headline1">Home</h1>
             <h3>Home Page for application</h3>
         <br>
-        <p>Design the rest of the app, then develop home page</p>
+        <p>Data comes from <a href="https://data.cityofchicago.org/Service-Requests/311-Service-Requests-Pot-Holes-Reported-Historical/7as2-ds3y">City of Chicago's 311 Service Requests</a></p>
       </div>
       
     <div id="search" class="view">
@@ -147,8 +147,33 @@
         
       // initial data loading
     let api = "https://data.cityofchicago.org/resource/_311-potholes.json";
-    
+    let data;
+      
+    let listOfStreets = [];
           
+    fetch(api)
+      .then(response => response.json())
+      .then(json => {
+        data = json;
+//         console.log(data);
+        for (let i of data) {
+//             console.log(i["street_address"]);
+            listOfStreets.push(i["street_address"])     // add names of streets for search values
+            db.results.add( {
+                streetName: i["street_address"],
+                zip:        i["zip"]
+            })
+        }
+//         for (s of listOfStreets) {
+//             console.log(s);
+//         }
+        for (street of listOfStreets) {                                     // for each street
+          let option = document.createElement("OPTION");               // create an "option" element
+          option.value = street;                                      // assign street as value as we loop through 
+          document.querySelector("#searches").appendChild(option);    // append option element to datalist
+        }
+    })
+      
       
       
   // ------------------------------------------------------------------------------------------------------- //    
@@ -206,14 +231,15 @@
       
         const db = new Dexie('MyApp');
 
-//         // Declare tables, IDs and indexes
-//         db.version(1).stores({
-//             results: '++id, name'
-//         });
+        // Declare tables, IDs and indexes
+        db.version(1).stores({
+            results: '++id, streetName, zip'
+        });
             
-//         db.results.add( {
-//             name: "Spiderman",
-//         })
+        db.results.add( {
+            streetName: "GOVERNORS",
+            zip:        "60624"
+        })
         
           </script>
       
