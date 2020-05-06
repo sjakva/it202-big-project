@@ -24,6 +24,10 @@
 
       <!-- Color Scheme: http://paletton.com/#uid=3020o0kjgiQ838odqdmoynNuptf -->
   <style>
+      
+    #mapDiv {
+        height: 100%;
+      }
 
     body {
         margin: 0 auto;
@@ -123,10 +127,11 @@
       
     <div id="map" class="view">
         <h1 class="mdc-typography--headline1">Map</h1>
-            <h3>Map showing traffic crashes on street</h3>
+            <h3>Map showing reports of 311 service requests</h3>
         <br>
-        <p>--- p element ---</p>
-      </div>
+        <div id="mapDiv"></div>
+       
+        </div>
 
   </main>
   
@@ -135,6 +140,25 @@
       
       
       <script src="js/app.js"></script>
+      
+            <!-- Include Dexie -->
+    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script> 
+      
+        <script>
+      
+        const db = new Dexie('MyApp');
+
+        // Declare tables, IDs and indexes
+        db.version(1).stores({
+            results: '++id, streetName, zip, status, lat, lng'
+        });
+            
+//         db.results.add( {
+//             streetName: "GOVERNORS",
+//             zip:        "60624"
+//         })
+        
+          </script>
 
 
   <script>
@@ -161,7 +185,10 @@
             listOfStreets.push(i["street_address"])     // add names of streets for search values
             db.results.add( {
                 streetName: i["street_address"],
-                zip:        i["zip"]
+                zip:        i["zip"],
+                status:     i["status"],
+                lat:        i["latitude"],
+                lng:        i["longitude"]
             })
         }
 //         for (s of listOfStreets) {
@@ -173,6 +200,36 @@
           document.querySelector("#searches").appendChild(option);    // append option element to datalist
         }
     })
+      
+    initMap = () => {
+        let center = {lat: 41.85, lng: -87.65};
+        let map = new google.maps.Map(document.querySelector("#mapDiv"), {
+          zoom: 10,
+          center: center
+        });
+        
+      db.results.each(result => {
+           console.log(result);
+           
+          let infowindow = new google.maps.InfoWindow({
+          content: // change to two-line card after testing
+              '<div id="content">'+'<div id="siteNotice">'+'</div>'+'<h1 id="name">'+result["street_address"]+'</h1><p>'
+              + result["zip"] + '<br>' + result["lat"] + '<br>' + result["lng"] + ', ' + result["status"] +'<br>'
+              + '</p></div>'
+          });
+          
+          let marker = new google.maps.Marker({
+              position: {lat: parseFloat(result["lat"]), lng: parseFloat(result["lng"])},
+              map: map,
+              title: result["street_address"]
+          });
+          
+          marker.addListener('click', function() {
+              infowindow.open(map, marker);
+          });
+      })
+    
+  }
       
       
       
@@ -225,23 +282,9 @@
       
     </script>
       
-      <!-- Include Dexie -->
-    <script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script> 
-        <script>
-      
-        const db = new Dexie('MyApp');
-
-        // Declare tables, IDs and indexes
-        db.version(1).stores({
-            results: '++id, streetName, zip'
-        });
-            
-        db.results.add( {
-            streetName: "GOVERNORS",
-            zip:        "60624"
-        })
-        
-          </script>
+      <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyABFuwGKDCJzDSjIn-kMeBHB1js-04QcE4&callback=initMap">
+    </script>
       
   </body>
     
